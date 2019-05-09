@@ -28,6 +28,7 @@
 
 		public Notification Notification { get; set; }
 		public CharacterBody CachedCharacterBody { get; set; }
+        public PlayerCharacterMasterController CachedMasterController { get; set; }
 		public string[] CachedCharacterBodyStats { get; set; }
 		public string[] CachedCharacterBodyStatsNames { get; set; }
 		public string[] CachedStatSheetStats { get; set; }
@@ -101,6 +102,11 @@
 				CachedCharacterBody = localUser.cachedBody;
 			}
 
+            if (CachedMasterController == null && localUser != null)
+            {
+                CachedMasterController = localUser.cachedMasterController;
+            }
+
 			if (Notification == null && CachedCharacterBody != null)
 			{
 				Notification = CachedCharacterBody.gameObject.AddComponent<Notification>();
@@ -135,8 +141,9 @@
 		private void OnSceneUnloaded(Scene scene)
 		{
 			CachedCharacterBody = null;
+            CachedMasterController = null;
 
-			if (Notification != null)
+            if (Notification != null)
 			{
 				Destroy(Notification);
 			}
@@ -154,25 +161,15 @@
 				sb.AppendLine($"{CachedCharacterBodyStatsNames[i]}: {stat}");
 			}
 
-			RunReport runReport = RunReport.Generate(Run.instance, GameResultType.Unknown);
-			RunReport.PlayerInfo playerInfo = null;
+            PlayerStatsComponent statsComponent = CachedMasterController.GetComponent<PlayerStatsComponent>();
 
-			for (int i = 0; i < runReport.playerInfoCount; i++)
-			{
-				if (runReport.GetPlayerInfo(i).isLocalPlayer)
-				{
-					playerInfo = runReport.GetPlayerInfo(i);
-					break;
-				}
-			}
-
-			if (playerInfo != null)
+			if (statsComponent != null)
 			{
 				for (int i = 0; i < CachedStatSheetStats.Length; i++)
 				{
 					StatDef statDef = (StatDef)typeof(StatDef).GetField(CachedStatSheetStats[i],
 						BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static).GetValue(null);
-					sb.AppendLine($"{CachedStatSheetStatsNames[i]}: {playerInfo.statSheet.GetStatDisplayValue(statDef)}");
+					sb.AppendLine($"{CachedStatSheetStatsNames[i]}: {statsComponent.currentStats.GetStatDisplayValue(statDef)}");
 				}
 			}
 
