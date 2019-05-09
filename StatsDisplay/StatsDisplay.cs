@@ -28,7 +28,7 @@
 
 		public Notification Notification { get; set; }
 		public CharacterBody CachedCharacterBody { get; set; }
-        public PlayerCharacterMasterController CachedMasterController { get; set; }
+		public PlayerCharacterMasterController CachedMasterController { get; set; }
 		public string[] CachedCharacterBodyStats { get; set; }
 		public string[] CachedCharacterBodyStatsNames { get; set; }
 		public string[] CachedStatSheetStats { get; set; }
@@ -102,10 +102,10 @@
 				CachedCharacterBody = localUser.cachedBody;
 			}
 
-            if (CachedMasterController == null && localUser != null)
-            {
-                CachedMasterController = localUser.cachedMasterController;
-            }
+			if (CachedMasterController == null && localUser != null)
+			{
+				CachedMasterController = localUser.cachedMasterController;
+			}
 
 			if (Notification == null && CachedCharacterBody != null)
 			{
@@ -141,9 +141,9 @@
 		private void OnSceneUnloaded(Scene scene)
 		{
 			CachedCharacterBody = null;
-            CachedMasterController = null;
+			CachedMasterController = null;
 
-            if (Notification != null)
+			if (Notification != null)
 			{
 				Destroy(Notification);
 			}
@@ -161,7 +161,7 @@
 				sb.AppendLine($"{CachedCharacterBodyStatsNames[i]}: {stat}");
 			}
 
-            PlayerStatsComponent statsComponent = CachedMasterController.GetComponent<PlayerStatsComponent>();
+			PlayerStatsComponent statsComponent = CachedMasterController.GetComponent<PlayerStatsComponent>();
 
 			if (statsComponent != null)
 			{
